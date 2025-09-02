@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deployment Guide - Recipe Recommender</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .steps-section {
+            flex: 1;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .code-section {
+            flex: 1;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eaeaea;
+        }
+        
+        h3 {
+            color: #3498db;
+            margin: 25px 0 15px;
+        }
+        
+        .step {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #eaeaea;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #3498db;
+            color: white;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        code {
+            background: #f1f1f1;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .note {
+            background: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .warning {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .success {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Deployment Guide</h1>
+            <p>Step-by-step instructions for deploying your Recipe Recommender application</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="steps-section">
+                <h2>Deployment Steps</h2>
+                
+                <div class="step">
+                    <h3><span class="step-number">1</span>Server Setup</h3>
+                    <p>Set up your Ubuntu server (20.04 or later recommended):</p>
+                    <ul>
+                        <li>Create a new Ubuntu server on your preferred cloud provider (AWS, DigitalOcean, etc.)</li>
+                        <li>SSH into your server: <code>ssh username@server_ip</code></li>
+                        <li>Update the system: <code>sudo apt update && sudo apt upgrade -y</code></li>
+                        <li>Install basic dependencies: <code>sudo apt install -y python3-pip python3-dev nginx</code></li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <h3><span class="step-number">2</span>MySQL Installation</h3>
+                    <p>Install and configure MySQL database:</p>
+                    <ul>
+                        <li>Install MySQL: <code>sudo apt install -y mysql-server</code></li>
+                        <li>Secure MySQL installation: <code>sudo mysql_secure_installation</code></li>
+                        <li>Login to MySQL: <code>sudo mysql</code></li>
+                        <li>Create database and user:</li>
+                    </ul>
+                    <div class="note">
+                        <p>Execute these SQL commands in MySQL prompt:</p>
+                        <code>CREATE DATABASE recipe_db;</code><br>
+                        <code>CREATE USER 'recipe_user'@'localhost' IDENTIFIED BY 'secure_password';</code><br>
+                        <code>GRANT ALL PRIVILEGES ON recipe_db.* TO 'recipe_user'@'localhost';</code><br>
+                        <code>FLUSH PRIVILEGES;</code><br>
+                        <code>EXIT;</code>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <h3><span class="step-number">3</span>Python Environment</h3>
+                    <p>Set up Python virtual environment:</p>
+                    <ul>
+                        <li>Install virtualenv: <code>sudo pip3 install virtualenv</code></li>
+                        <li>Create project directory: <code>mkdir ~/recipe-app && cd ~/recipe-app</code></li>
+                        <li>Create virtual environment: <code>virtualenv venv</code></li>
+                        <li>Activate virtual environment: <code>source venv/bin/activate</code></li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <h3><span class="step-number">4</span>Application Setup</h3>
+                    <p>Install dependencies and set up your application:</p>
+                    <ul>
+                        <li>Install required packages: <code>pip install flask mysql-connector-python openai python-dotenv</code></li>
+                        <li>Create project structure:</li>
+                    </ul>
+                    <pre>
+recipe-app/
+├── app.py
+├── requirements.txt
+├── .env
+├── static/
+│   └── style.css
+└── templates/
+    └── index.html
+                    </pre>
+                    <ul>
+                        <li>Create your Flask application (app.py)</li>
+                        <li>Set up environment variables in .env file</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <h3><span class="step-number">5</span>Environment Configuration</h3>
+                    <p>Configure environment variables for your application:</p>
+                    <div class="note">
+                        <p>Create a .env file with the following variables:</p>
+                        <code>OPENAI_API_KEY=your_openai_api_key_here</code><br>
+                        <code>DB_HOST=localhost</code><br>
+                        <code>DB_USER=recipe_user</code><br>
+                        <code>DB_PASSWORD=secure_password</code><br>
+                        <code>DB_NAME=recipe_db</code><br>
+                        <code>PAYSTACK_PUBLIC_KEY=your_paystack_public_key</code><br>
+                        <code>PAYSTACK_SECRET_KEY=your_paystack_secret_key</code>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="code-section">
+                <h2>Code Examples</h2>
+                
+                <div class="step">
+                    <h3>Flask Application (app.py)</h3>
+                    <p>Basic structure of your Flask application:</p>
+                    <pre>
+from flask import Flask, render_template, request, jsonify
+import mysql.connector
+import openai
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+app = Flask(__name__)
+
+# Database configuration
+db_config = {
+    'host': os.getenv('DB_HOST'),
+    'user': os.getenv('DB_USER'),
+    'password': os.getenv('DB_PASSWORD'),
+    'database': os.getenv('DB_NAME')
+}
+
+# OpenAI configuration
+openai.api_key = os.getenv('OPENAI_API_KEY')
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/get_recipes', methods=['POST'])
+def get_recipes():
+    ingredients = request.json.get('ingredients', '')
+    
+    # Call OpenAI API
+    prompt = f"Suggest 3 simple recipes with these ingredients: {ingredients}. Provide response in JSON format with recipe name, ingredients, instructions, and cooking time."
+    
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        
+        recipes = response.choices[0].message.content
+        
+        # Save to database
+        save_to_db(ingredients, recipes)
+        
+        return jsonify({'success': True, 'recipes': recipes})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+def save_to_db(ingredients, recipes):
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+        
+        query = "INSERT INTO recipes (ingredients, recipes) VALUES (%s, %s)"
+        cursor.execute(query, (ingredients, recipes))
+        
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print(f"Database error: {e}")
+
+if __name__ == '__main__':
+    app.run(debug=True)
+                    </pre>
+                </div>
+                
+                <div class="step">
+                    <h3>Nginx Configuration</h3>
+                    <p>Create an Nginx configuration file at <code>/etc/nginx/sites-available/recipe-app</code>:</p>
+                    <pre>
+server {
+    listen 80;
+    server_name your_domain.com;
+
+    location / {
+        proxy_pass http://localhost:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /static {
+        alias /home/username/recipe-app/static;
+        expires 30d;
+    }
+}
+                    </pre>
+                    <p>Enable the site:</p>
+                    <code>sudo ln -s /etc/nginx/sites-available/recipe-app /etc/nginx/sites-enabled/</code><br>
+                    <code>sudo nginx -t</code><br>
+                    <code>sudo systemctl restart nginx</code>
+                </div>
+                
+                <div class="step">
+                    <h3>Gunicorn Setup</h3>
+                    <p>Install Gunicorn and create a service:</p>
+                    <ul>
+                        <li>Install Gunicorn: <code>pip install gunicorn</code></li>
+                        <li>Test Gunicorn: <code>gunicorn --bind 0.0.0.0:8000 app:app</code></li>
+                        <li>Create a systemd service file at <code>/etc/systemd/system/recipe-app.service</code>:</li>
+                    </ul>
+                    <pre>
+[Unit]
+Description=Gunicorn instance for Recipe App
+After=network.target
+
+[Service]
+User=username
+Group=www-data
+WorkingDirectory=/home/username/recipe-app
+Environment="PATH=/home/username/recipe-app/venv/bin"
+ExecStart=/home/username/recipe-app/venv/bin/gunicorn --workers 3 --bind unix:recipe-app.sock -m 007 app:app
+
+[Install]
+WantedBy=multi-user.target
+                    </pre>
+                    <p>Start and enable the service:</p>
+                    <code>sudo systemctl start recipe-app</code><br>
+                    <code>sudo systemctl enable recipe-app</code>
+                </div>
+                
+                <div class="step">
+                    <h3>Database Schema</h3>
+                    <p>Create the recipes table in your MySQL database:</p>
+                    <pre>
+CREATE TABLE recipes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ingredients TEXT NOT NULL,
+    recipes JSON NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE payments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    amount DECIMAL(10, 2),
+    currency VARCHAR(10),
+    paystack_reference VARCHAR(255),
+    status VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+                    </pre>
+                </div>
+                
+                <div class="step">
+                    <h3>Paystack Integration</h3>
+                    <p>Example code for Paystack payment integration:</p>
+                    <pre>
+@app.route('/initialize_payment', methods=['POST'])
+def initialize_payment():
+    try:
+        email = request.json.get('email')
+        amount = request.json.get('amount')  # Amount in kobo
+        
+        # Initialize Paystack transaction
+        url = "https://api.paystack.co/transaction/initialize"
+        headers = {
+            "Authorization": f"Bearer {os.getenv('PAYSTACK_SECRET_KEY')}",
+            "Content-Type": "application/json"
+        }
+        data = {
+            "email": email,
+            "amount": amount,
+            "currency": "NGN",
+            "callback_url": "http://yourdomain.com/payment/verify"
+        }
+        
+        response = requests.post(url, headers=headers, json=data)
+        result = response.json()
+        
+        if result['status']:
+            return jsonify({
+                'success': True, 
+                'authorization_url': result['data']['authorization_url'],
+                'access_code': result['data']['access_code']
+            })
+        else:
+            return jsonify({'success': False, 'error': result['message']})
+            
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+                    </pre>
+                </div>
+            </div>
+        </div>
+        
+        <div class="success">
+            <h3>Deployment Checklist</h3>
+            <ul>
+                <li><input type="checkbox"> Server set up with Ubuntu</li>
+                <li><input type="checkbox"> MySQL installed and configured</li>
+                <li><input type="checkbox"> Python virtual environment created</li>
+                <li><input type="checkbox"> Application code deployed</li>
+                <li><input type="checkbox"> Environment variables configured</li>
+                <li><input type="checkbox"> Database schema created</li>
+                <li><input type="checkbox"> Gunicorn configured as service</li>
+                <li><input type="checkbox"> Nginx configured and tested</li>
+                <li><input type="checkbox"> Domain name pointed to server</li>
+                <li><input type="checkbox"> SSL certificate installed (Let's Encrypt)</li>
+            </ul>
+        </div>
+        
+        <div class="note">
+            <h3>Next Steps</h3>
+            <p>After deployment, consider implementing:</p>
+            <ul>
+                <li>User authentication system</li>
+                <li>Recipe saving and favorites functionality</li>
+                <li>Payment tracking and subscription management</li>
+                <li>Email notifications for subscribers</li>
+                <li>Recipe rating and review system</li>
+            </ul>
+        </div>
+        
+        <footer>
+            <p>Recipe Recommender Deployment Guide &copy; 2023</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simple interactivity for checkboxes
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        this.parentElement.style.textDecoration = 'line-through';
+                        this.parentElement.style.color = '#4caf50';
+                    } else {
+                        this.parentElement.style.textDecoration = 'none';
+                        this.parentElement.style.color = '';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
